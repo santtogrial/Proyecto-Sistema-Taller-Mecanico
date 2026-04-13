@@ -9,6 +9,37 @@ public class Cliente {
     private String telefono;
     private List<Vehiculo> vehiculos;
 
+    // Getters y Setters
+    public int getId(){
+        return id;
+    }
+
+    public String getNombre(){
+        return nombre;
+    }
+    public void setNombre(String nombre){
+        this.nombre = nombre;
+    }
+
+    public String getCuitCuil(){
+        return cuitcuil;
+    }
+    public void setCuitCuil(String cuitcuil){
+        this.cuitcuil = cuitcuil;
+    }
+
+    public String getTelefono(){
+        return telefono;
+    }
+    public void setTelefono(String telefono){
+        this.telefono = telefono;
+    }
+
+    public List<Vehiculo> getVehiculos(){
+        return vehiculos;
+    }
+    //
+
 
 
 
