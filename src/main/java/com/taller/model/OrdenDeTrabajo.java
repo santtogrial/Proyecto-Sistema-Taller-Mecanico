@@ -1,6 +1,7 @@
 package com.taller.model;
 import com.taller.enums.EstadoOrden;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrdenDeTrabajo {
@@ -18,6 +19,10 @@ public class OrdenDeTrabajo {
     // Getters y Setters
     public int getId(){
         return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public Vehiculo getVehiculo(){
@@ -75,9 +80,14 @@ public class OrdenDeTrabajo {
         estado = EstadoOrden.EN_PROCESO;
         fechaRecepcion = LocalDate.now();
         vehiculo.setKilometraje(kilometraje);
+        repuestos = new ArrayList<ItemRepuesto>();
+        manoDeObra = new ArrayList<ItemManoDeObra>();
+        pagos = new ArrayList<Pago>();
     }
 
     // Funciones
+
+    // Pagos
     public double calcularTotal(){
         double total = 0;
         for (ItemRepuesto r : repuestos){
@@ -107,6 +117,16 @@ public class OrdenDeTrabajo {
 
     public void registrarPago(Pago pago){
         pagos.add(pago);
+    }
+
+
+    // Repuestos y Mano de Obra
+    public void agregarRepuesto(ItemRepuesto repuesto){
+        repuestos.add(repuesto);
+    }
+
+    public void agregarManoDeObra(ItemManoDeObra manoDeObra){
+        this.manoDeObra.add(manoDeObra);
     }
 
 

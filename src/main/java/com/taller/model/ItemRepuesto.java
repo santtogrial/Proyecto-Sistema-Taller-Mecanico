@@ -2,8 +2,8 @@ package com.taller.model;
 
 public class ItemRepuesto extends ItemTrabajo{
 
-    public ItemRepuesto(String nombre, double monto){
-        super(nombre, monto);
+    public ItemRepuesto(String nombre, double monto, OrdenDeTrabajo ordenDeTrabajo){
+        super(nombre, monto, ordenDeTrabajo);
         super.setTipo("Repuesto");
     }
 }

@@ -1,5 +1,6 @@
 package com.taller.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Vehiculo {
@@ -8,7 +9,7 @@ public class Vehiculo {
     private String marca;
     private String modelo;
     private int año;
-    private int kilometraje; // que se acutalize cuando una orden de reparacion de este vehiculo pasa a estar en listo para retirar.
+    private int kilometraje;
     private List<OrdenDeTrabajo> historial;
 
     // Getters y Setters
@@ -64,6 +65,15 @@ public class Vehiculo {
         historial.add(orden);
     }
 
+    // Constructor
+    public Vehiculo(String dominio, String marca, String modelo, int año, Cliente dueño){
+        setDominio(dominio);
+        this.marca = marca;
+        this.modelo = modelo;
+        this.año = año;
+        this.dueño = dueño;
+        historial = new ArrayList<OrdenDeTrabajo>();
+    }
 
     // Funciones
     

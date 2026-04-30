@@ -1,5 +1,7 @@
 package com.taller.model;
 
+import com.taller.enums.EstadoOrden;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cliente {
@@ -12,6 +14,10 @@ public class Cliente {
     // Getters y Setters
     public int getId(){
         return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public String getNombre(){
@@ -38,18 +44,32 @@ public class Cliente {
     public List<Vehiculo> getVehiculos(){
         return vehiculos;
     }
-    //
+
+    // Constructor
+    public Cliente(String nombre, String cuitcuil, String telefono){
+        this.nombre = nombre;
+        this.cuitcuil = cuitcuil;
+        this.telefono = telefono;
+        vehiculos = new ArrayList<Vehiculo>();
+    }
 
 
 
 
     public void agregarVehiculo(Vehiculo vehiculo){
-        // Armar un if que busque el vehiculo en la base de datos por dominio y si no lo encuentra manejar el error.
         vehiculos.add(vehiculo);
     }
 
     public double calcularDeudaTotal(){
-        return 1;
+        double deuda = 0;
+        for (Vehiculo v : vehiculos){
+            for (OrdenDeTrabajo o : v.getHistorial()){
+                if (o.getEstadoOrden() == EstadoOrden.RETIRADO){
+                    deuda = deuda + o.calcularSaldo();
+                }
+            }
+        }
+        return deuda;
     }
     
 }
