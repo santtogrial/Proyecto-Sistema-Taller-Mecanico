@@ -1,6 +1,5 @@
 package com.taller.database;
 
-import com.taller.model.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -40,100 +39,4 @@ public class DataBaseManager {
             System.out.println(e.getMessage());
         }
     }
-
-    public void insertarCliente(Cliente cliente){
-        String sql = "INSERT INTO clientes(Nombre,CuitCuil,Telefono) VALUES(?,?,?)";
-        try (var dec = conectar().prepareStatement(sql)){
-            dec.setString(1, cliente.getNombre());
-            dec.setString(2, cliente.getCuitCuil());
-            dec.setString(3, cliente.getTelefono());
-            dec.executeUpdate();
-            var keys = dec.getGeneratedKeys();
-            if (keys.next()){
-                cliente.setId(keys.getInt(1));
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public void insertarVehiculo(Vehiculo vehiculo){
-        String sql = "INSERT INTO vehiculo(Dominio,ID_Cliente_Dueño,Marca,Modelo,Año) VALUES(?,?,?,?,?)";
-        try (var dec = conectar().prepareStatement(sql)){
-            dec.setString(1, vehiculo.getDominio());
-            dec.setInt(2, vehiculo.getDueño().getId());
-            dec.setString(3, vehiculo.getMarca());
-            dec.setString(4, vehiculo.getModelo());
-            dec.setInt(5, vehiculo.getAño());
-            dec.executeUpdate();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public void insertarOrdenDeTrabajo(OrdenDeTrabajo ordenDeTrabajo){
-        String sql = "INSERT INTO ordenDeTrabajo(Dominio_Vehiculo,Kilometraje,FechaRecepcion,Estado) VALUES(?,?,?,?)";
-        try (var dec = conectar().prepareStatement(sql)){
-            dec.setString(1, ordenDeTrabajo.getVehiculo().getDominio());
-            dec.setInt(2, ordenDeTrabajo.getKilometraje());
-            dec.setString(3, ordenDeTrabajo.getFechaRecepcion().toString());
-            dec.setString(4, ordenDeTrabajo.getEstadoOrden().toString());
-            dec.executeUpdate();
-            var keys = dec.getGeneratedKeys();
-            if (keys.next()){
-                ordenDeTrabajo.setId(keys.getInt(1));
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public void insertarItemTrabajo(ItemTrabajo itemTrabajo){
-        String sql = "INSERT INTO itemTrabajo(ID_OrdenDeTrabajo,Nombre,Monto,Tipo) VALUES(?,?,?,?)";
-        try (var dec = conectar().prepareStatement(sql)){
-            dec.setInt(1, itemTrabajo.getOrdenDeTrabajo().getId());
-            dec.setString(2, itemTrabajo.getNombre());
-            dec.setDouble(3, itemTrabajo.getMonto());
-            dec.setString(4, itemTrabajo.getTipo());
-            dec.executeUpdate();
-            var keys = dec.getGeneratedKeys();
-            if (keys.next()){
-                itemTrabajo.setId(keys.getInt(1));
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public void insertarPago(Pago pago){
-        String sql = "INSERT INTO pago(ID_OrdenDeTrabajo,Monto,Fecha,Tipo,NumeroComprobante,TipoTarjeta,Ultimos4Digitos) VALUES(?,?,?,?,?,?,?)";
-        try (var dec = conectar().prepareStatement(sql)){
-            dec.setInt(1, pago.getOrdenDeTrabajo().getId());
-            dec.setDouble(2, pago.getMonto());
-            dec.setString(3, pago.getFecha().toString());
-            dec.setString(4, pago.getTipo());
-            if (pago instanceof PagoTransferencia){
-                dec.setString(5, ((PagoTransferencia) pago).getNumeroComprobante());
-                dec.setNull(6, java.sql.Types.VARCHAR);
-                dec.setNull(7, java.sql.Types.VARCHAR);
-            } else if (pago instanceof PagoTarjeta){
-                dec.setNull(5, java.sql.Types.VARCHAR);
-                dec.setString(6, ((PagoTarjeta) pago).getTipoTarjeta());
-                dec.setString(7, ((PagoTarjeta) pago).getUltimos4Digitos());
-            } else {
-                dec.setNull(5, java.sql.Types.VARCHAR);
-                dec.setNull(6, java.sql.Types.VARCHAR);
-                dec.setNull(7, java.sql.Types.VARCHAR);
-            }
-            dec.executeUpdate();
-            var keys = dec.getGeneratedKeys();
-            if (keys.next()){
-                pago.setId(keys.getInt(1));
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
 }
