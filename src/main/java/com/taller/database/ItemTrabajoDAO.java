@@ -1,6 +1,7 @@
 package com.taller.database;
 
 import com.taller.model.ItemTrabajo;
+import com.taller.model.OrdenDeTrabajo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -36,6 +37,26 @@ public class ItemTrabajoDAO {
         try (ResultSet rs = DataBaseManager.conectar().createStatement().executeQuery(sql)){
             while (rs.next()){
                 ItemTrabajo i = new ItemTrabajo(rs.getString("Nombre"),rs.getDouble("Monto"),ordenDeTrabajoDAO.obtenerOrdenDeTrabajoPorId(rs.getInt("ID_OrdenDeTrabajo")));
+                i.setId(rs.getInt("ID"));
+                i.setTipo(rs.getString("Tipo"));
+                items.add(i);
+            }
+            return items;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public ArrayList<ItemTrabajo> obtenerItemsTrabajoPorOrden(int OrdenId){
+        ArrayList<ItemTrabajo> items = new ArrayList<>();
+        String sql = "SELECT * FROM itemTrabajo WHERE ID_OrdenDeTrabajo = ?";
+        OrdenDeTrabajo o = ordenDeTrabajoDAO.obtenerOrdenDeTrabajoPorId(OrdenId);
+        try (PreparedStatement ps = DataBaseManager.conectar().prepareStatement(sql)){
+            ps.setInt(1, OrdenId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                ItemTrabajo i = new ItemTrabajo(rs.getString("Nombre"),rs.getDouble("Monto"), o);
                 i.setId(rs.getInt("ID"));
                 i.setTipo(rs.getString("Tipo"));
                 items.add(i);

@@ -8,6 +8,7 @@ public class OrdenDeTrabajo {
     private int id;
     private Vehiculo vehiculo;
     private int kilometraje;
+    private String descripcion;
     private LocalDate fechaRecepcion;
     private LocalDate fechaFinalizacion;
     private EstadoOrden estado;
@@ -37,6 +38,13 @@ public class OrdenDeTrabajo {
     }
     public void setKilometraje(int kilometraje){
         this.kilometraje = kilometraje;
+    }
+
+    public String getDescripcion(){
+        return descripcion;
+    }
+    public void setDescripcion(String descripcion){
+        this.descripcion = descripcion;
     }
 
     public LocalDate getFechaRecepcion(){
@@ -74,9 +82,10 @@ public class OrdenDeTrabajo {
 
     // Constructor
 
-    public OrdenDeTrabajo(Vehiculo vehiculo, int kilometraje){
+    public OrdenDeTrabajo(Vehiculo vehiculo, int kilometraje, String descripcion){
         this.vehiculo = vehiculo;
         this.kilometraje = kilometraje;
+        this.descripcion = descripcion;
         estado = EstadoOrden.EN_PROCESO;
         fechaRecepcion = LocalDate.now();
         vehiculo.setKilometraje(kilometraje);

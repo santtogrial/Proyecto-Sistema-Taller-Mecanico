@@ -1,7 +1,9 @@
 package com.taller.service;
 
 import com.taller.database.PagoDAO;
+import com.taller.model.OrdenDeTrabajo;
 import com.taller.model.Pago;
+import java.util.ArrayList;
 
 public class PagoService {
 
@@ -14,6 +16,10 @@ public class PagoService {
 
     public void agregarPago(Pago pago){
         pagoDAO.insertarPago(pago);
+    }
+
+    public ArrayList<Pago> buscarPagosPorOrden(OrdenDeTrabajo ordenDeTrabajo){
+        return pagoDAO.obtenerPagosPorOrdenId(ordenDeTrabajo.getId());
     }
     
 }

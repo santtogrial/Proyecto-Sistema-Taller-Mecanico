@@ -1,5 +1,6 @@
 package com.taller.database;
 
+import com.taller.model.Cliente;
 import com.taller.model.Vehiculo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,6 +58,36 @@ public class VehiculoDAO {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
+        }
+    }
+
+    public ArrayList<Vehiculo> obtenerVehiculosPorClienteId(int clienteId){
+        ArrayList<Vehiculo> vehiculos = new ArrayList<>();
+        String sql = "SELECT * FROM vehiculo WHERE ID_Cliente_Dueño = ?";
+        Cliente c = clienteDAO.obtenerClientePorId(clienteId);
+        try (PreparedStatement ps = DataBaseManager.conectar().prepareStatement(sql)){
+            ps.setInt(1, clienteId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                Vehiculo v = new Vehiculo(rs.getString("Dominio"),rs.getString("Marca"),rs.getString("Modelo"),rs.getInt("Año"), c);
+                v.setKilometraje(rs.getInt("Kilometraje"));
+                vehiculos.add(v);
+            }
+            return vehiculos;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public void actualizarDueñoVehiculo(String dominio, int clienteId){
+        String sql = "UPDATE vehiculo SET ID_Cliente_Dueño = ? WHERE Dominio = ?";
+        try (PreparedStatement ps = DataBaseManager.conectar().prepareStatement(sql)){
+            ps.setInt(1, clienteId);
+            ps.setString(2, dominio);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
     }
 

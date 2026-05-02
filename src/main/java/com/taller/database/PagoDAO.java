@@ -1,5 +1,6 @@
 package com.taller.database;
 
+import com.taller.model.OrdenDeTrabajo;
 import com.taller.model.Pago;
 import com.taller.model.PagoEfectivo;
 import com.taller.model.PagoTarjeta;
@@ -70,6 +71,35 @@ public class PagoDAO {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;            
+        }
+    }
+
+    public ArrayList<Pago> obtenerPagosPorOrdenId(int idOrden){
+        ArrayList<Pago> pagos = new ArrayList<>();
+        String sql = "SELECT * FROM pago WHERE ID_OrdenDeTrabajo = ?";
+        try (PreparedStatement ps = DataBaseManager.conectar().prepareStatement(sql)){
+            ps.setInt(1, idOrden);
+            ResultSet rs = ps.executeQuery();
+            OrdenDeTrabajo orden = ordenDeTrabajoDAO.obtenerOrdenDeTrabajoPorId(idOrden);
+            while(rs.next()){
+                Pago p;
+                String t = rs.getString("Tipo");
+                if (t.equals("Transferencia")){
+                    p = new PagoTransferencia(rs.getDouble("Monto"), orden, rs.getString("NumeroComprobante"));
+                }   else if (t.equals("Tarjeta")){
+                        p = new PagoTarjeta(rs.getDouble("Monto"), orden, rs.getString("TipoTarjeta"),rs.getString("Ultimos4Digitos"));
+                }   else {
+                        p = new PagoEfectivo(rs.getDouble("Monto"), orden);
+                        p.setTipo(rs.getString("Tipo"));
+                }
+                p.setId(rs.getInt("ID"));
+                p.setFecha(LocalDate.parse(rs.getString("Fecha")));
+                pagos.add(p);
+            }
+            return pagos;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
         }
     }
 

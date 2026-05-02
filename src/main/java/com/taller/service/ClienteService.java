@@ -2,13 +2,17 @@ package com.taller.service;
 
 import com.taller.database.ClienteDAO;
 import com.taller.model.Cliente;
+import com.taller.model.Vehiculo;
+import java.util.ArrayList;
 
 public class ClienteService {
 
     private ClienteDAO clienteDAO;
+    private VehiculoService vehiculoService;
 
-    public ClienteService(ClienteDAO clienteDAO){
+    public ClienteService(ClienteDAO clienteDAO, VehiculoService vehiculoService){
         this.clienteDAO = clienteDAO;
+        this.vehiculoService = vehiculoService;
     }
 
     public Cliente buscarClientePorId(int id){
@@ -30,6 +34,26 @@ public class ClienteService {
         else{
             clienteDAO.insertarCliente(cliente);
         }
+    }
+
+    public double obtenerDeudaCliente(Cliente cliente){
+        ArrayList<Vehiculo> vehiculos = vehiculoService.buscarVehiculosPorCliente(cliente);
+        double deuda = 0;
+        for (Vehiculo v : vehiculos){
+            deuda = deuda + vehiculoService.obtenerDeudaVehiculo(v);
+        }
+        return deuda;
+    }
+
+    public ArrayList<Cliente> buscarClientesDeudores(){
+        ArrayList<Cliente> clientes = clienteDAO.obtenerClientes();
+        ArrayList<Cliente> clientesDeudores = new ArrayList<>();
+        for (Cliente c : clientes){
+            if (obtenerDeudaCliente(c) > 0){
+                clientesDeudores.add(c);
+            }
+        }
+        return clientesDeudores;
     }
 
 

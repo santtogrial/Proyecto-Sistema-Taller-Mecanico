@@ -2,6 +2,7 @@ package com.taller.database;
 
 import com.taller.enums.EstadoOrden;
 import com.taller.model.OrdenDeTrabajo;
+import com.taller.model.Vehiculo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
@@ -16,12 +17,13 @@ public class OrdenDeTrabajoDAO {
     }
 
     public void insertarOrdenDeTrabajo(OrdenDeTrabajo ordenDeTrabajo){
-        String sql = "INSERT INTO ordenDeTrabajo(Dominio_Vehiculo,Kilometraje,FechaRecepcion,Estado) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO ordenDeTrabajo(Dominio_Vehiculo,Kilometraje,Descripcion,FechaRecepcion,Estado) VALUES(?,?,?,?,?)";
         try (PreparedStatement ps = DataBaseManager.conectar().prepareStatement(sql)){
             ps.setString(1, ordenDeTrabajo.getVehiculo().getDominio());
             ps.setInt(2, ordenDeTrabajo.getKilometraje());
-            ps.setString(3, ordenDeTrabajo.getFechaRecepcion().toString());
-            ps.setString(4, ordenDeTrabajo.getEstadoOrden().toString());
+            ps.setString(3, ordenDeTrabajo.getDescripcion());
+            ps.setString(4, ordenDeTrabajo.getFechaRecepcion().toString());
+            ps.setString(5, ordenDeTrabajo.getEstadoOrden().toString());
             ps.executeUpdate();
             var keys = ps.getGeneratedKeys();
             if (keys.next()){
@@ -37,7 +39,7 @@ public class OrdenDeTrabajoDAO {
         String sql = "SELECT * FROM ordenDeTrabajo";
         try (ResultSet rs = DataBaseManager.conectar().createStatement().executeQuery(sql)){
             while(rs.next()){
-                OrdenDeTrabajo o = new OrdenDeTrabajo(vehiculoDAO.obtenerVehiculoPorDominio(rs.getString("Dominio_Vehiculo")), rs.getInt("Kilometraje"));
+                OrdenDeTrabajo o = new OrdenDeTrabajo(vehiculoDAO.obtenerVehiculoPorDominio(rs.getString("Dominio_Vehiculo")), rs.getInt("Kilometraje"), rs.getString("Descripcion"));
                 o.setId(rs.getInt("ID"));
                 o.setFechaRecepcion(LocalDate.parse(rs.getString("FechaRecepcion")));
                 o.setEstadoOrden(EstadoOrden.valueOf(rs.getString("Estado")));
@@ -61,7 +63,7 @@ public class OrdenDeTrabajoDAO {
             ResultSet rs = ps.executeQuery();
             OrdenDeTrabajo o = null;
             if (rs.next()){
-                o = new OrdenDeTrabajo(vehiculoDAO.obtenerVehiculoPorDominio(rs.getString("Dominio_Vehiculo")), rs.getInt("Kilometraje"));
+                o = new OrdenDeTrabajo(vehiculoDAO.obtenerVehiculoPorDominio(rs.getString("Dominio_Vehiculo")), rs.getInt("Kilometraje"), rs.getString("Descripcion"));
                 o.setId(id);
                 o.setFechaRecepcion(LocalDate.parse(rs.getString("FechaRecepcion")));
                 o.setEstadoOrden(EstadoOrden.valueOf(rs.getString("Estado")));
@@ -71,6 +73,76 @@ public class OrdenDeTrabajoDAO {
                 }
             }
             return o;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public ArrayList<OrdenDeTrabajo> obtenerOrdenesDeTrabajoPorDominio(String dominio){
+        ArrayList<OrdenDeTrabajo> ordenes = new ArrayList<>();
+        String sql = "SELECT * FROM ordenDeTrabajo WHERE Dominio_Vehiculo = ?";
+        try (PreparedStatement ps = DataBaseManager.conectar().prepareStatement(sql)){
+            Vehiculo vehiculo = vehiculoDAO.obtenerVehiculoPorDominio(dominio);
+            ps.setString(1, dominio);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                OrdenDeTrabajo o = new OrdenDeTrabajo(vehiculo, rs.getInt("Kilometraje"), rs.getString("Descripcion"));
+                o.setId(rs.getInt("ID"));
+                o.setFechaRecepcion(LocalDate.parse(rs.getString("FechaRecepcion")));
+                o.setEstadoOrden(EstadoOrden.valueOf(rs.getString("Estado")));
+                String fechaFin = rs.getString("FechaFinalizacion");
+                if (fechaFin != null){
+                    o.setFechaFinalizacion(LocalDate.parse(rs.getString("FechaFinalizacion")));
+                }
+                ordenes.add(o);
+            }
+            return ordenes;
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public ArrayList<OrdenDeTrabajo> obtenerOrdenesDeTrabajoEnProceso(){
+        ArrayList<OrdenDeTrabajo> ordenes = new ArrayList<>();
+        String sql = "SELECT * FROM ordenDeTrabajo WHERE Estado = 'EN_PROCESO'";
+        try (ResultSet rs = DataBaseManager.conectar().prepareStatement(sql).executeQuery()){
+            while(rs.next()){
+                OrdenDeTrabajo o = new OrdenDeTrabajo(vehiculoDAO.obtenerVehiculoPorDominio(rs.getString("Dominio_Vehiculo")), rs.getInt("Kilometraje"), rs.getString("Descripcion"));
+                o.setId(rs.getInt("ID"));
+                o.setFechaRecepcion(LocalDate.parse(rs.getString("FechaRecepcion")));
+                o.setEstadoOrden(EstadoOrden.valueOf(rs.getString("Estado")));
+                String fechaFin = rs.getString("FechaFinalizacion");
+                if (fechaFin != null){
+                    o.setFechaFinalizacion(LocalDate.parse(rs.getString("FechaFinalizacion")));
+                }
+                ordenes.add(o);
+            }
+            return ordenes;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public ArrayList<OrdenDeTrabajo> obtenerOrdenesDeTrabajoRetirado(){
+        ArrayList<OrdenDeTrabajo> ordenes = new ArrayList<>();
+        String sql = "SELECT * FROM ordenDeTrabajo WHERE Estado = 'RETIRADO'";
+        try (ResultSet rs = DataBaseManager.conectar().prepareStatement(sql).executeQuery()){
+            while(rs.next()){
+                OrdenDeTrabajo o = new OrdenDeTrabajo(vehiculoDAO.obtenerVehiculoPorDominio(rs.getString("Dominio_Vehiculo")), rs.getInt("Kilometraje"), rs.getString("Descripcion"));
+                o.setId(rs.getInt("ID"));
+                o.setFechaRecepcion(LocalDate.parse(rs.getString("FechaRecepcion")));
+                o.setEstadoOrden(EstadoOrden.valueOf(rs.getString("Estado")));
+                String fechaFin = rs.getString("FechaFinalizacion");
+                if (fechaFin != null){
+                    o.setFechaFinalizacion(LocalDate.parse(rs.getString("FechaFinalizacion")));
+                }
+                ordenes.add(o);
+            }
+            return ordenes;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;

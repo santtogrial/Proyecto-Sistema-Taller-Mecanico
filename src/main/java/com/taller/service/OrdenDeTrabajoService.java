@@ -1,24 +1,78 @@
 package com.taller.service;
 
 import com.taller.database.OrdenDeTrabajoDAO;
+import com.taller.enums.EstadoOrden;
+import com.taller.model.ItemTrabajo;
 import com.taller.model.OrdenDeTrabajo;
+import com.taller.model.Pago;
+import com.taller.model.Vehiculo;
+import java.util.ArrayList;
 
 public class OrdenDeTrabajoService {
 
     private OrdenDeTrabajoDAO ordenDeTrabajoDAO;
-    private VehiculoService vehiculoService;
+    private ItemTrabajoService itemTrabajoService;
+    private PagoService pagoService;
 
-    public OrdenDeTrabajoService(OrdenDeTrabajoDAO ordenDeTrabajoDAO, VehiculoService vehiculoService){
+    public OrdenDeTrabajoService(OrdenDeTrabajoDAO ordenDeTrabajoDAO, ItemTrabajoService itemTrabajoService, PagoService pagoService){
         this.ordenDeTrabajoDAO = ordenDeTrabajoDAO;
-        this.vehiculoService = vehiculoService;
+        this.itemTrabajoService = itemTrabajoService;
+        this.pagoService = pagoService;
     }
 
     public void agregarOrdenDeTrabajo(OrdenDeTrabajo ordenDeTrabajo){
-        if (vehiculoService.dominioExiste(ordenDeTrabajo.getVehiculo().getDominio())){
             ordenDeTrabajoDAO.insertarOrdenDeTrabajo(ordenDeTrabajo);
+    }
+
+    public ArrayList<OrdenDeTrabajo> buscarOrdenesDeTrabajoPorVehiculo(Vehiculo vehiculo){
+        return ordenDeTrabajoDAO.obtenerOrdenesDeTrabajoPorDominio(vehiculo.getDominio());
+    }
+
+    public ArrayList<OrdenDeTrabajo> buscarOrdenesDeTrabajoEnProceso(){
+        return ordenDeTrabajoDAO.obtenerOrdenesDeTrabajoEnProceso();
+    }
+
+    public ArrayList<OrdenDeTrabajo> buscarOrdenesDeudoras(){
+        ArrayList<OrdenDeTrabajo> ordenes = ordenDeTrabajoDAO.obtenerOrdenesDeTrabajoRetirado();
+        ArrayList<OrdenDeTrabajo> ordenesDeudoras = new ArrayList<>();
+        for (OrdenDeTrabajo o : ordenes){
+            if (obtenerSaldoOrden(o) > 0){
+                ordenesDeudoras.add(o);
+            }
         }
-        else{
-            throw new IllegalArgumentException("El dominio ingresado no coincide con ningun dominio registrado en la base de datos: " + ordenDeTrabajo.getVehiculo().getDominio());
+        return ordenesDeudoras;
+    }
+
+    public double obtenerCargosOrden(OrdenDeTrabajo orden){
+        double cargos = 0;
+        ArrayList<ItemTrabajo> items = itemTrabajoService.buscarItemsTrabajoPorOrden(orden);
+        for (ItemTrabajo i : items){
+            cargos = cargos + i.getMonto();
+        }
+        return cargos;
+    }
+
+    public double obtenerAbonosOrden(OrdenDeTrabajo orden){
+        double abonos = 0;
+        ArrayList<Pago> pagos = pagoService.buscarPagosPorOrden(orden);
+        for (Pago p : pagos){
+            abonos = abonos + p.getMonto();
+        }
+        return abonos;
+    }
+
+    public double obtenerSaldoOrden(OrdenDeTrabajo orden){
+        return (obtenerCargosOrden(orden) - obtenerAbonosOrden(orden));
+    }
+
+    public void actualizarEstadoOrden(OrdenDeTrabajo orden, EstadoOrden estado){
+        ordenDeTrabajoDAO.actualizarEstadoOrden(orden.getId(), estado);
+    }
+
+    public void registrarPagoActualizarEstado(Pago pago){
+        pagoService.agregarPago(pago);
+        if (obtenerSaldoOrden(pago.getOrdenDeTrabajo()) == 0){
+            actualizarEstadoOrden(pago.getOrdenDeTrabajo(), EstadoOrden.FINALIZADO);
         }
     }
     

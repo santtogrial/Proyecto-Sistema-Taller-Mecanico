@@ -22,7 +22,7 @@ public class DataBaseManager {
         " ID INTEGER PRIMARY KEY AUTOINCREMENT," + " ID_OrdenDeTrabajo INTEGER NOT NULL," + " Nombre text NOT NULL," + " Monto REAL NOT NULL," + "Tipo text NOT NULL)";
 
         var sqlOrdenDeTrabajo = "CREATE TABLE IF NOT EXISTS ordenDeTrabajo (" + 
-        "ID INTEGER PRIMARY KEY AUTOINCREMENT," + " Dominio_Vehiculo text NOT NULL," + " Kilometraje INTEGER NOT NULL," + " FechaRecepcion text NOT NULL," + " FechaFinalizacion text," + " Estado text NOT NULL)";
+        "ID INTEGER PRIMARY KEY AUTOINCREMENT," + " Dominio_Vehiculo text NOT NULL," + " Kilometraje INTEGER NOT NULL," + " Descripcion text NOT NULL," + " FechaRecepcion text NOT NULL," + " FechaFinalizacion text," + " Estado text NOT NULL)";
 
         var sqlPago = "CREATE TABLE IF NOT EXISTS pago (" + 
         " ID INTEGER PRIMARY KEY AUTOINCREMENT," + " ID_OrdenDeTrabajo INTEGER NOT NULL," + " Monto REAL NOT NULL," + " Fecha text NOT NULL," + " Tipo text NOT NULL," + " NumeroComprobante text," + " TipoTarjeta text," + " Ultimos4Digitos text)";
