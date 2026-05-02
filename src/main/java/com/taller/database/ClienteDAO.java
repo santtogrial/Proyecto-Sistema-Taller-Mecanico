@@ -55,5 +55,22 @@ public class ClienteDAO {
             return null;
         }
     }
+
+    public Cliente obtenerClientePorCuitCuil(String cuitCuil){
+        String sql = "SELECT * FROM clientes WHERE CuitCuil = ?";
+        try (PreparedStatement ps = DataBaseManager.conectar().prepareStatement(sql)){
+            ps.setString(1, cuitCuil);
+            ResultSet rs = ps.executeQuery();
+            Cliente c = null;
+            if(rs.next()){
+                c = new Cliente(rs.getString("Nombre"),rs.getString("CuitCuil"),rs.getString("Telefono"));
+                c.setId(rs.getInt("ID"));
+            }
+            return c;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
     
 }
