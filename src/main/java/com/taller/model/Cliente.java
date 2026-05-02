@@ -53,7 +53,10 @@ public class Cliente {
         vehiculos = new ArrayList<Vehiculo>();
     }
 
-
+    @Override
+    public String toString(){
+        return "[" + id + "] " + nombre + " | CUIT/CUIL: " + cuitcuil + " | Tel: " + telefono;
+    }
 
 
     public void agregarVehiculo(Vehiculo vehiculo){

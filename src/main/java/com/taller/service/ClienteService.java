@@ -15,6 +15,10 @@ public class ClienteService {
         this.vehiculoService = vehiculoService;
     }
 
+    public ArrayList<Cliente> obtenerClientes(){
+        return clienteDAO.obtenerClientes();
+    }
+
     public Cliente buscarClientePorId(int id){
         return clienteDAO.obtenerClientePorId(id);
     }

@@ -2,6 +2,7 @@ package com.taller.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
 
 public class DataBaseManager {
     private static final String URL = "jdbc:sqlite:taller.db";
@@ -29,14 +30,15 @@ public class DataBaseManager {
 
         var sqlVehiculo = "CREATE TABLE IF NOT EXISTS vehiculo (" + 
         " Dominio text PRIMARY KEY," + " ID_Cliente_Dueño INTEGER NOT NULL," + " Marca text NOT NULL," + " Modelo text NOT NULL," + " Año INTEGER NOT NULL," + " Kilometraje INTEGER)";
-        try (var dec = conectar().createStatement()){
-            dec.execute(sqlCliente);
-            dec.execute(sqlItemTrabajo);
-            dec.execute(sqlOrdenDeTrabajo);
-            dec.execute(sqlPago);
-            dec.execute(sqlVehiculo);
+        try (Connection conn = conectar();
+        Statement st = conn.createStatement()){
+            st.execute(sqlCliente);
+            st.execute(sqlItemTrabajo);
+            st.execute(sqlOrdenDeTrabajo);
+            st.execute(sqlPago);
+            st.execute(sqlVehiculo);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Error al crear tablas", e);
         }
     }
 }

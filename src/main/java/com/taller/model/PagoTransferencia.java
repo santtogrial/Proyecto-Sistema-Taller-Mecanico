@@ -1,11 +1,13 @@
 package com.taller.model;
 
+import com.taller.enums.TipoPago;
+
 public class PagoTransferencia extends Pago{
     private String numeroComprobante;
     
     public PagoTransferencia(double monto, OrdenDeTrabajo ordenDeTrabajo, String numeroComprobante){
         super(monto, ordenDeTrabajo);
-        super.setTipo("Transferencia");
+        super.setTipo(TipoPago.TRANSFERENCIA);
         this.numeroComprobante = numeroComprobante;
     }
 

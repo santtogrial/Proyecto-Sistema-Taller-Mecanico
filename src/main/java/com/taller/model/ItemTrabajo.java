@@ -1,10 +1,12 @@
 package com.taller.model;
 
+import com.taller.enums.TipoItem;
+
 public class ItemTrabajo {
     private int id;
     private String nombre;
     private double monto;
-    private String tipo;
+    private TipoItem tipo;
     private OrdenDeTrabajo ordenDeTrabajo;
 
     // Getters y Setters
@@ -30,10 +32,10 @@ public class ItemTrabajo {
         this.monto = monto;
     }
     
-    public String getTipo(){
+    public TipoItem getTipo(){
         return tipo;
     }
-    public void setTipo(String tipo){
+    public void setTipo(TipoItem tipo){
         this.tipo = tipo;
     }
 
@@ -50,6 +52,12 @@ public class ItemTrabajo {
         this.nombre = nombre;
         this.monto = monto;
         this.ordenDeTrabajo = ordenDeTrabajo;
+    }
+
+
+    @Override
+    public String toString(){
+        return tipo + " | " + nombre + " | $" + monto;
     }
     
 }

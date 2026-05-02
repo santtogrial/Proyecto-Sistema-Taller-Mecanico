@@ -75,7 +75,10 @@ public class Vehiculo {
         historial = new ArrayList<OrdenDeTrabajo>();
     }
 
-    // Funciones
+    @Override
+    public String toString(){
+        return dominio + " | " + marca + " " + modelo + " " + año + " | " + kilometraje + " km";
+    }
     
     
     

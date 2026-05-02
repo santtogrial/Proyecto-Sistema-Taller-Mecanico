@@ -24,16 +24,20 @@ public class OrdenDeTrabajoService {
             ordenDeTrabajoDAO.insertarOrdenDeTrabajo(ordenDeTrabajo);
     }
 
+    public OrdenDeTrabajo buscarOrdenDeTrabajoPorId(int id){
+        return ordenDeTrabajoDAO.obtenerOrdenDeTrabajoPorId(id);
+    }
+
     public ArrayList<OrdenDeTrabajo> buscarOrdenesDeTrabajoPorVehiculo(Vehiculo vehiculo){
         return ordenDeTrabajoDAO.obtenerOrdenesDeTrabajoPorDominio(vehiculo.getDominio());
     }
 
-    public ArrayList<OrdenDeTrabajo> buscarOrdenesDeTrabajoEnProceso(){
-        return ordenDeTrabajoDAO.obtenerOrdenesDeTrabajoEnProceso();
+    public ArrayList<OrdenDeTrabajo> buscarOrdenesDeTrabajoPorEstado(EstadoOrden estado){
+        return ordenDeTrabajoDAO.obtenerOrdenesDeTrabajoPorEstado(estado);
     }
 
     public ArrayList<OrdenDeTrabajo> buscarOrdenesDeudoras(){
-        ArrayList<OrdenDeTrabajo> ordenes = ordenDeTrabajoDAO.obtenerOrdenesDeTrabajoRetirado();
+        ArrayList<OrdenDeTrabajo> ordenes = ordenDeTrabajoDAO.obtenerOrdenesDeTrabajoPorEstado(EstadoOrden.RETIRADO);
         ArrayList<OrdenDeTrabajo> ordenesDeudoras = new ArrayList<>();
         for (OrdenDeTrabajo o : ordenes){
             if (obtenerSaldoOrden(o) > 0){

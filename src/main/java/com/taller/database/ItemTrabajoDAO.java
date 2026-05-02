@@ -1,9 +1,12 @@
 package com.taller.database;
 
+import com.taller.enums.TipoItem;
 import com.taller.model.ItemTrabajo;
 import com.taller.model.OrdenDeTrabajo;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class ItemTrabajoDAO {
@@ -16,35 +19,37 @@ public class ItemTrabajoDAO {
 
     public void insertarItemTrabajo(ItemTrabajo itemTrabajo){
         String sql = "INSERT INTO itemTrabajo(ID_OrdenDeTrabajo,Nombre,Monto,Tipo) VALUES(?,?,?,?)";
-        try (PreparedStatement ps = DataBaseManager.conectar().prepareStatement(sql)){
+        try (Connection conn = DataBaseManager.conectar();
+        PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, itemTrabajo.getOrdenDeTrabajo().getId());
             ps.setString(2, itemTrabajo.getNombre());
             ps.setDouble(3, itemTrabajo.getMonto());
-            ps.setString(4, itemTrabajo.getTipo());
+            ps.setString(4, itemTrabajo.getTipo().toString());
             ps.executeUpdate();
             var keys = ps.getGeneratedKeys();
             if (keys.next()){
                 itemTrabajo.setId(keys.getInt(1));
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Error al insertar item de trabajo", e);
         }
     }
 
     public ArrayList<ItemTrabajo> obtenerItemsTrabajo(){
         ArrayList<ItemTrabajo> items = new ArrayList<>();
         String sql = "SELECT * FROM itemTrabajo";
-        try (ResultSet rs = DataBaseManager.conectar().createStatement().executeQuery(sql)){
+        try (Connection conn = DataBaseManager.conectar();
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(sql)){
             while (rs.next()){
                 ItemTrabajo i = new ItemTrabajo(rs.getString("Nombre"),rs.getDouble("Monto"),ordenDeTrabajoDAO.obtenerOrdenDeTrabajoPorId(rs.getInt("ID_OrdenDeTrabajo")));
                 i.setId(rs.getInt("ID"));
-                i.setTipo(rs.getString("Tipo"));
+                i.setTipo(TipoItem.valueOf(rs.getString("Tipo")));
                 items.add(i);
             }
             return items;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+            throw new RuntimeException("Error al obtener items de trabajo", e);
         }
     }
 
@@ -52,19 +57,20 @@ public class ItemTrabajoDAO {
         ArrayList<ItemTrabajo> items = new ArrayList<>();
         String sql = "SELECT * FROM itemTrabajo WHERE ID_OrdenDeTrabajo = ?";
         OrdenDeTrabajo o = ordenDeTrabajoDAO.obtenerOrdenDeTrabajoPorId(OrdenId);
-        try (PreparedStatement ps = DataBaseManager.conectar().prepareStatement(sql)){
+        try (Connection conn = DataBaseManager.conectar();
+        PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, OrdenId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
-                ItemTrabajo i = new ItemTrabajo(rs.getString("Nombre"),rs.getDouble("Monto"), o);
-                i.setId(rs.getInt("ID"));
-                i.setTipo(rs.getString("Tipo"));
-                items.add(i);
+            try (ResultSet rs = ps.executeQuery()){
+                while (rs.next()){
+                    ItemTrabajo i = new ItemTrabajo(rs.getString("Nombre"),rs.getDouble("Monto"), o);
+                    i.setId(rs.getInt("ID"));
+                    i.setTipo(TipoItem.valueOf(rs.getString("Tipo")));
+                    items.add(i);
+                }
+                return items;
             }
-            return items;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+            throw new RuntimeException("Error al obtener item de trabajo", e);
         }
     }
     

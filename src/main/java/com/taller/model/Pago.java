@@ -1,12 +1,13 @@
 package com.taller.model;
 
+import com.taller.enums.TipoPago;
 import java.time.LocalDate;
 
 public class Pago {
     private int id;
     private double monto;
     private LocalDate fecha;
-    private String tipo;
+    private TipoPago tipo;
     private OrdenDeTrabajo ordenDeTrabajo;
 
     // Getters y Setters
@@ -32,10 +33,10 @@ public class Pago {
         this.fecha = fecha;
     }
 
-    public String getTipo(){
+    public TipoPago getTipo(){
         return tipo;
     }
-    public void setTipo(String tipo){
+    public void setTipo(TipoPago tipo){
         this.tipo = tipo;
     }
 
@@ -51,6 +52,12 @@ public class Pago {
         this.monto = monto;
         this.ordenDeTrabajo = ordenDeTrabajo;
         fecha = LocalDate.now();
+    }
+
+
+    @Override
+    public String toString(){
+        return "Pago #" + id + " | " + tipo + " | $" + monto + " | " + fecha;
     }
     
 }

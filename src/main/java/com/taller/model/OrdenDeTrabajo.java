@@ -94,6 +94,12 @@ public class OrdenDeTrabajo {
         pagos = new ArrayList<Pago>();
     }
 
+
+    @Override
+    public String toString(){
+        return "Orden #" + id + " | " + vehiculo.getDominio() + " | " + descripcion + " | Estado: " + estado + " | Recepcion: " + fechaRecepcion;
+    }
+
     // Funciones
 
     // Pagos
