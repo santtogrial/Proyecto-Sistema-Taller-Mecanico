@@ -1,11 +1,15 @@
 package com.taller.database;
 
-import com.taller.model.Cliente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Repository;
+
+import com.taller.model.Cliente;
+
+@Repository
 public class ClienteDAO {
 
     public void insertarCliente(Cliente cliente){

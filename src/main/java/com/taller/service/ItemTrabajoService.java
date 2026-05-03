@@ -1,14 +1,20 @@
 package com.taller.service;
 
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.taller.database.ItemTrabajoDAO;
 import com.taller.model.ItemTrabajo;
 import com.taller.model.OrdenDeTrabajo;
-import java.util.ArrayList;
 
+@Service
 public class ItemTrabajoService {
 
     private ItemTrabajoDAO itemTrabajoDAO;
 
+    @Autowired
     public ItemTrabajoService(ItemTrabajoDAO itemTrabajoDAO){
         this.itemTrabajoDAO = itemTrabajoDAO;
     }

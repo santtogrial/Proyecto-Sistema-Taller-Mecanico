@@ -1,15 +1,21 @@
 package com.taller.service;
 
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.taller.database.ClienteDAO;
 import com.taller.model.Cliente;
 import com.taller.model.Vehiculo;
-import java.util.ArrayList;
 
+@Service
 public class ClienteService {
 
     private ClienteDAO clienteDAO;
     private VehiculoService vehiculoService;
 
+    @Autowired
     public ClienteService(ClienteDAO clienteDAO, VehiculoService vehiculoService){
         this.clienteDAO = clienteDAO;
         this.vehiculoService = vehiculoService;

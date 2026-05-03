@@ -1,17 +1,23 @@
 package com.taller.database;
 
-import com.taller.model.Cliente;
-import com.taller.model.Vehiculo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.taller.model.Cliente;
+import com.taller.model.Vehiculo;
+
+@Repository
 public class VehiculoDAO {
 
     private ClienteDAO clienteDAO;
 
+    @Autowired
     public VehiculoDAO(ClienteDAO clienteDAO){
         this.clienteDAO = clienteDAO;
     }

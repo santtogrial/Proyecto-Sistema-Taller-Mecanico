@@ -1,18 +1,24 @@
 package com.taller.database;
 
-import com.taller.enums.TipoItem;
-import com.taller.model.ItemTrabajo;
-import com.taller.model.OrdenDeTrabajo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.taller.enums.TipoItem;
+import com.taller.model.ItemTrabajo;
+import com.taller.model.OrdenDeTrabajo;
+
+@Repository
 public class ItemTrabajoDAO {
 
     private OrdenDeTrabajoDAO ordenDeTrabajoDAO;
 
+    @Autowired
     public ItemTrabajoDAO(OrdenDeTrabajoDAO ordenDeTrabajoDAO){
         this.ordenDeTrabajoDAO = ordenDeTrabajoDAO;
     }

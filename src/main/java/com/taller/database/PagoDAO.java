@@ -1,11 +1,5 @@
 package com.taller.database;
 
-import com.taller.enums.TipoPago;
-import com.taller.model.OrdenDeTrabajo;
-import com.taller.model.Pago;
-import com.taller.model.PagoEfectivo;
-import com.taller.model.PagoTarjeta;
-import com.taller.model.PagoTransferencia;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,10 +7,22 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.taller.enums.TipoPago;
+import com.taller.model.OrdenDeTrabajo;
+import com.taller.model.Pago;
+import com.taller.model.PagoEfectivo;
+import com.taller.model.PagoTarjeta;
+import com.taller.model.PagoTransferencia;
+
+@Repository
 public class PagoDAO {
 
     private OrdenDeTrabajoDAO ordenDeTrabajoDAO;
 
+    @Autowired
     public PagoDAO(OrdenDeTrabajoDAO ordenDeTrabajoDAO){
         this.ordenDeTrabajoDAO = ordenDeTrabajoDAO;
     }

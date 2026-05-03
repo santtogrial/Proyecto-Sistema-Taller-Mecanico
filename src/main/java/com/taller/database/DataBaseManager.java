@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
+import org.springframework.stereotype.Component;;
+
+@Component
 public class DataBaseManager {
     private static final String URL = "jdbc:sqlite:taller.db";
 

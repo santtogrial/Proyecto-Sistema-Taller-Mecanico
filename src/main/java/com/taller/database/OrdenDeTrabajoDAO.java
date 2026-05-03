@@ -1,8 +1,5 @@
 package com.taller.database;
 
-import com.taller.enums.EstadoOrden;
-import com.taller.model.OrdenDeTrabajo;
-import com.taller.model.Vehiculo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,10 +7,19 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.taller.enums.EstadoOrden;
+import com.taller.model.OrdenDeTrabajo;
+import com.taller.model.Vehiculo;
+
+@Repository
 public class OrdenDeTrabajoDAO {
 
     private VehiculoDAO vehiculoDAO;
 
+    @Autowired
     public OrdenDeTrabajoDAO(VehiculoDAO vehiculoDAO){
         this.vehiculoDAO = vehiculoDAO;
     }
